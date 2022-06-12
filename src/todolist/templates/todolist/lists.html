@@ -1,0 +1,50 @@
+{% extends 'todolist/base.html' %}
+{% block title %} <title>Your lists</title> {% endblock %}
+{% block body %}
+{% load crispy_forms_tags %}
+
+    <h1 class="h1 ml-sm-2">This is your saved list :</h1>
+    {% if your_lists %}
+
+        <form method="post">
+         {% csrf_token %}
+            <div class="d-inline-flex">
+                <div class="row">
+                    <div class="col">
+                        <div class="list-group">
+                            {% for item in your_lists %}
+                            <div class="d-inline-flex mr-2 ">
+                                <a href="#" class="list-group-item list-group-item-action list-group-item-secondary mb-2 ml-sm-2">{{ item }}</a>
+                                    <button type="submit" name="remove_list" value ="{{ item.id }}" class="btn btn-danger mb-2 ml-2 bi bi-trash todolist-{{ item.id }}"></button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+<!--            <div class="list-group">-->
+<!--            {% for item in your_lists %}-->
+<!--                <div class="d-inline-flex mr-2 ">-->
+<!--                    <a href="#" class="list-group-item list-group-item-action list-group-item-secondary mb-2 ml-sm-2">{{ item }}</a>-->
+<!--                    <button type="button" class="btn btn-danger mb-2 ml-2 bi bi-trash"></button>-->
+<!--                </div>-->
+<!--            {% endfor %}-->
+<!--            </div>-->
+
+    {% else %}
+        <p class="ml-sm-2">You don't have any list yet</p>
+    {% endif %}
+
+
+    <form method="post" class="form-inline">
+        {% csrf_token %}
+        <div class="form-group mb-2">
+            {{ form.title|as_crispy_field }}
+        </div>
+        <button type="submit" name="create_list" class="btn btn-primary mb-2">Create new list</button>
+    </form>
+
+
+{% endblock %}
