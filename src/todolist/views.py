@@ -36,5 +36,9 @@ def lists(request):
         my_list_to_remove.delete()
         return HttpResponseRedirect(request.path)
 
-
     return render(request, "todolist/lists.html", {"your_lists": your_lists, "form": form})
+
+
+def list_edit(request, slug):
+    todolist = TodoList.objects.get(slug=slug)
+    return render(request, "todolist/list_edit.html", {"todolist": todolist})

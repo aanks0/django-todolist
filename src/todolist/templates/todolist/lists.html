@@ -14,7 +14,7 @@
                         <div class="list-group">
                             {% for item in your_lists %}
                             <div class="d-inline-flex mr-2 ">
-                                <a href="#" class="list-group-item list-group-item-action list-group-item-secondary mb-2 ml-sm-2">{{ item }}</a>
+                                <a href="{% url 'todolist-list-edit' slug=item.slug %}" class="list-group-item list-group-item-action list-group-item-secondary mb-2 ml-sm-2">{{ item }}</a>
                                     <button type="submit" name="remove_list" value ="{{ item.id }}" class="btn btn-danger mb-2 ml-2 bi bi-trash todolist-{{ item.id }}"></button>
                             </div>
                             {% endfor %}
