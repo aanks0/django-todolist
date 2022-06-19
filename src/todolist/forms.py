@@ -1,5 +1,5 @@
 from django import forms
-from todolist.models import TodoList
+from todolist.models import TodoList, ListElements
 
 
 # class TodoListCreateForm(forms.Form):
@@ -14,7 +14,7 @@ from todolist.models import TodoList
 class TodoListCreateForm(forms.ModelForm):
     class Meta:
         model = TodoList
-        fields = ['title', 'description', 'author', 'elements']
+        fields = ['title', 'description', 'author']
         widgets = {"title": forms.TextInput(attrs={'class': 'form-control ml-sm-2 mr-sm-2',
                                                    'placeholder': 'Your list title',
                                                    'id': 'listTitle'})}
@@ -23,8 +23,14 @@ class TodoListCreateForm(forms.ModelForm):
         max_length = {"title": 225}
 
 
-class TodoListDeleteList(forms.ModelForm):
+class AddElementToList(forms.ModelForm):
     class Meta:
-        model = TodoList
-        fields = ['id', 'description']
+        model = ListElements
+        fields = ['element', 'listId']
+        widgets = {"element": forms.TextInput(attrs={'class': 'form-control ml-sm-2 mr-sm-2',
+                                                     'placeholder': 'Add an element to your list'})}
+        labels = {"element": ""}
+        required = {"element": True}
+        max_length = {"element": 500}
 
+        widgets = {"listId": forms.HiddenInput()}

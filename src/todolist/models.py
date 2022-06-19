@@ -4,25 +4,18 @@ from django.utils.text import slugify
 
 # Create your models here.
 
+class ListElements(models.Model):
+    element = models.CharField(blank=False, max_length=500)
+    listId = models.ForeignKey('TodoList', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.element
+
+
 class TodoList(models.Model):
     title = models.CharField(max_length=225, blank=False, unique=True)
     description = models.TextField(blank=True, null=True)
     author = models.EmailField(blank=True, null=True)
-    elements = models.JSONField(blank=True, null=True)
-
-    # {
-    #     "text": {
-    #         "before": "date",
-    #         "reminder": "bool",
-    #         "done": "bool"
-    #     },
-    #     "text2": {
-    #         "before": "date",
-    #         "reminder": "bool",
-    #         "done": "bool"
-    #     }
-    # }
-
     slug = models.SlugField(blank=True, null=True)
 
     def save(self, *args, **kwargs):

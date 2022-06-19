@@ -1,26 +1,59 @@
 {% extends 'todolist/base.html' %}
-{% block title %} <title>Edit a list</title> {% endblock %}
-
+{% block title %} <title>Edit list {{ todolist.title }}</title> {% endblock %}
 {% block body %}
+{% load crispy_forms_tags %}
 
+    <h1 class="h1 ml-sm-2">Editing list : {{ todolist.title }}</h1>
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createListModal">+</button>
+    {% if list_elements %}
+
+        <p class="ml-sm-2"> You have todo the followings :</p>
+
+        <form method="post">
+        {% csrf_token %}
+            <div class="d-inline-flex">
+                <div class="row">
+                    <div class="col">
+                        <div class="list-group">
+                            {% for element in list_elements %}
+                            <div class="d-inline-flex mr-2 ">
+                                <a href="#" class="list-group-item list-group-item-action list-group-item-secondary mb-2 ml-sm-2">{{ element }}</a>
+                                <button type="submit" name="remove_item" value ="{{ element.id }}" class="btn btn-danger mb-2 ml-2 bi bi-trash element-{{ element.id }}"></button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    {% else %}
+        <p class="ml-sm-2">You don't have any element in this list. Click the + button to add one.</p>
+    {% endif %}
+
+    <button type="button" class="btn btn-primary ml-sm-2" data-toggle="modal" data-target="#createListModal">+</button>
     <!-- Modal -->
     <div class="modal fade" id="createListModal" tabindex="-1" role="dialog" aria-labelledby="createListModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="createListModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="createListModalLabel">Add an element</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            ...
+              <form method="post" class="form-inline">
+                {% csrf_token %}
+                <div class="form-group mb-2">
+                    {{ form.element|as_crispy_field }}
+                    {{ form.listId|as_crispy_field }}
+                </div>
+                <button type="submit" name="add_element" class="btn btn-primary mb-2 ml-2">Add element</button>
+              </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>

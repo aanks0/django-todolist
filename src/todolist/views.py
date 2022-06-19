@@ -1,8 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path
-from todolist.models import TodoList
-from todolist.forms import TodoListCreateForm, TodoListDeleteList
+from todolist.models import TodoList, ListElements
+from todolist.forms import TodoListCreateForm, AddElementToList
 
 
 # Create your views here.
@@ -41,4 +41,22 @@ def lists(request):
 
 def list_edit(request, slug):
     todolist = TodoList.objects.get(slug=slug)
-    return render(request, "todolist/list_edit.html", {"todolist": todolist})
+    list_elements = ListElements.objects.filter(listId=todolist.pk)
+
+    if request.method == "POST" and 'remove_item' in request.POST:
+        item_id = request.POST.get('remove_item')
+        my_item_to_remove = ListElements.objects.get(id=item_id)
+        my_item_to_remove.delete()
+        return HttpResponseRedirect(request.path)
+
+    if request.method == "POST" and 'add_element' in request.POST:
+        form = AddElementToList(request.POST)
+        print("request.POST:", request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect(request.path)
+    else:
+        form = AddElementToList()
+        form.fields['listId'].initial = todolist.pk
+
+    return render(request, "todolist/list_edit.html", {"todolist": todolist, "list_elements": list_elements, "form": form})
