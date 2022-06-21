@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'todolist',
     'crispy_forms',
+    'bootstrap_datepicker_plus'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

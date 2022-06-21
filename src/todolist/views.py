@@ -49,10 +49,19 @@ def list_edit(request, slug):
         my_item_to_remove.delete()
         return HttpResponseRedirect(request.path)
 
+    if request.method == "POST" and 'item_done' in request.POST:
+        item_id = request.POST.get('item_done')
+        my_item_to_mark_as_done = ListElements.objects.get(id=item_id)
+        my_item_to_mark_as_done.mark_as_done = not my_item_to_mark_as_done.mark_as_done
+        my_item_to_mark_as_done.save()
+        return HttpResponseRedirect(request.path)
+
     if request.method == "POST" and 'add_element' in request.POST:
         form = AddElementToList(request.POST)
         print("request.POST:", request.POST)
         if form.is_valid():
+            date = form.cleaned_data.get('deadLine')
+            print(date)
             form.save()
         return HttpResponseRedirect(request.path)
     else:

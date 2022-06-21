@@ -6,6 +6,9 @@ from django.utils.text import slugify
 
 class ListElements(models.Model):
     element = models.CharField(blank=False, max_length=500)
+    deadLine = models.DateField(blank=True, null=True)
+    reminder = models.BooleanField(default=False)
+    mark_as_done = models.BooleanField(default=False)
     listId = models.ForeignKey('TodoList', on_delete=models.CASCADE)
 
     def __str__(self):

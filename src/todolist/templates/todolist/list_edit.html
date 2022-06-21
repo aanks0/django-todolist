@@ -3,6 +3,8 @@
 {% block body %}
 {% load crispy_forms_tags %}
 
+    <a class="bi bi-arrow-return-left btn btn-primary ml-2 mt-2 mb-2" href="{% url 'todolist-lists' %}">  Back</a>
+
     <h1 class="h1 ml-sm-2">Editing list : {{ todolist.title }}</h1>
 
     {% if list_elements %}
@@ -16,9 +18,11 @@
                     <div class="col">
                         <div class="list-group">
                             {% for element in list_elements %}
-                            <div class="d-inline-flex mr-2 ">
-                                <a href="#" class="list-group-item list-group-item-action list-group-item-secondary mb-2 ml-sm-2">{{ element }}</a>
+                            <div class="d-inline-flex mr-2 text-nowrap">
+                                <a href="#" class="list-group-item list-group-item-action {% if element.mark_as_done %} list-group-item-danger {% else %} list-group-item-secondary {% endif %} mb-2 ml-sm-2">{{ element }}</a>
+                                {% if element.deadLine %} <a href="#" class="list-group-item list-group-item-action ml-2 mb-2 font-weight-bold">{{ element.deadLine }}</a> {% else %} <a href="#" class="list-group-item list-group-item-action ml-2 mb-2"> No deadline </a> {% endif %}
                                 <button type="submit" name="remove_item" value ="{{ element.id }}" class="btn btn-danger mb-2 ml-2 bi bi-trash element-{{ element.id }}"></button>
+                                <button type="submit" name="item_done" value ="{{ element.id }}" class="btn {% if element.mark_as_done %} btn-danger bi-x-lg {% else %} btn-success bi-check {% endif %} mb-2 ml-2 bi element-{{ element.id }}"></button>
                             </div>
                             {% endfor %}
                         </div>
@@ -43,11 +47,14 @@
             </button>
           </div>
           <div class="modal-body">
-              <form method="post" class="form-inline">
+              <form method="post">
                 {% csrf_token %}
                 <div class="form-group mb-2">
                     {{ form.element|as_crispy_field }}
                     {{ form.listId|as_crispy_field }}
+                    {{ form.deadLine|as_crispy_field }}
+                    {{ form.media }}
+
                 </div>
                 <button type="submit" name="add_element" class="btn btn-primary mb-2 ml-2">Add element</button>
               </form>
@@ -60,3 +67,4 @@
     </div>
 
 {% endblock %}
+
